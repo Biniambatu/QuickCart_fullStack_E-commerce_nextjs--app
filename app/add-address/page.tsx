@@ -16,9 +16,8 @@ const AddAddress = () => {
         state: '',
     })
 
-    const onSubmitHandler = async (e) => {
+    const onSubmitHandler = async (e:any) => {
         e.preventDefault();
-
     }
 
     return (
@@ -53,12 +52,14 @@ const AddAddress = () => {
                         />
                         <textarea
                             className="px-2 py-2.5 focus:border-orange-500 transition border border-gray-500/30 rounded outline-none w-full text-gray-500 resize-none"
-                            type="text"
                             rows={4}
                             placeholder="Address (Area and Street)"
-                            onChange={(e) => setAddress({ ...address, area: e.target.value })}
+                            onChange={(e) =>
+                                setAddress({ ...address, area: e.target.value })
+                            }
                             value={address.area}
-                        ></textarea>
+                            />
+
                         <div className="flex space-x-3">
                             <input
                                 className="px-2 py-2.5 focus:border-orange-500 transition border border-gray-500/30 rounded outline-none w-full text-gray-500"
