@@ -4,17 +4,17 @@ import React, { useEffect, useState } from "react";
 
 const OrderSummary = () => {
 
-  const { currency, router, getCartCount, getCartAmount } = useAppContext()
+  const { currency, router, getCartCount, getCartAmount } = useAppContext() as any
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const [userAddresses, setUserAddresses] = useState([]);
 
   const fetchUserAddresses = async () => {
-    setUserAddresses(addressDummyData);
+    setUserAddresses(addressDummyData as any);
   }
 
-  const handleAddressSelect = (address) => {
+  const handleAddressSelect = (address:any) => {
     setSelectedAddress(address);
     setIsDropdownOpen(false);
   };
@@ -26,6 +26,7 @@ const OrderSummary = () => {
   useEffect(() => {
     fetchUserAddresses();
   }, [])
+
 
   return (
     <div className="w-full md:w-96 bg-gray-500/5 p-5">
@@ -44,8 +45,8 @@ const OrderSummary = () => {
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
               <span>
-                {selectedAddress
-                  ? `${selectedAddress.fullName}, ${selectedAddress.area}, ${selectedAddress.city}, ${selectedAddress.state}`
+                {selectedAddress as any
+                  ? `${(selectedAddress as any).fullName}, ${(selectedAddress as any).area}, ${(selectedAddress as any).city}, ${(selectedAddress as any).state}`
                   : "Select Address"}
               </span>
               <svg className={`w-5 h-5 inline float-right transition-transform duration-200 ${isDropdownOpen ? "rotate-0" : "-rotate-90"}`}
@@ -63,7 +64,7 @@ const OrderSummary = () => {
                     className="px-4 py-2 hover:bg-gray-500/10 cursor-pointer"
                     onClick={() => handleAddressSelect(address)}
                   >
-                    {address.fullName}, {address.area}, {address.city}, {address.state}
+                   {(address as any).fullName}, {(address as any).area}, {(address as any).city}, {(address as any).state}
                   </li>
                 ))}
                 <li

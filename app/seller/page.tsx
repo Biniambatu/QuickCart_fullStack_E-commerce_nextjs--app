@@ -12,7 +12,7 @@ const AddProduct = () => {
   const [price, setPrice] = useState('');
   const [offerPrice, setOfferPrice] = useState('');
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e:any) => {
     e.preventDefault();
 
   };
@@ -28,7 +28,7 @@ const AddProduct = () => {
               <label key={index} htmlFor={`image${index}`}>
                 <input onChange={(e) => {
                   const updatedFiles = [...files];
-                  updatedFiles[index] = e.target.files[0];
+               (updatedFiles as any)[index] = (e as any).target.files[0];
                   setFiles(updatedFiles);
                 }} type="file" id={`image${index}`} hidden />
                 <Image

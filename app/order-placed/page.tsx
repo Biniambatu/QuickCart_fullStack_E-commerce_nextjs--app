@@ -6,7 +6,7 @@ import { useEffect } from 'react'
 
 const OrderPlaced = () => {
 
-  const { router } = useAppContext()
+  const { router } = useAppContext() as any
 
   useEffect(() => {
     setTimeout(() => {

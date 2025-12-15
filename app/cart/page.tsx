@@ -8,7 +8,7 @@ import OrderSummary from "../../components/OrderSummary";
 
 const Cart = () => {
 
- const { products, router, cartItems, addToCart, updateCartQuantity, getCartCount } = useAppContext();
+ const { products, router, cartItems, addToCart, updateCartQuantity, getCartCount }:any = useAppContext();
 
   return (
     <>
@@ -41,7 +41,7 @@ const Cart = () => {
               </thead>
               <tbody>
                 {Object.keys(cartItems).map((itemId) => {
-                  const product = products.find(product => product._id === itemId);
+                  const product = products.find((product: any) => product._id === itemId);
 
                   if (!product || cartItems[itemId] <= 0) return null;
 

@@ -56,7 +56,7 @@ const Navbar = () => {
                 </UserButton.MenuItems>
               </UserButton>
             </>:
-          <button onClick={openSignIn} className="flex items-center gap-2 hover:text-gray-900 transition cursor-pointer">
+          <button onClick={openSignIn as any} className="flex items-center gap-2 hover:text-gray-900 transition cursor-pointer">
           <Image className='cursor-pointer' src={assets.user_icon} alt="user icon" />
           Account
           </button>
@@ -84,7 +84,7 @@ const Navbar = () => {
                 </UserButton.MenuItems>
               </UserButton>
             </>:
-          <button onClick={openSignIn} className="flex items-center gap-2 hover:text-gray-900 transition cursor-pointer">
+          <button onClick={openSignIn as any} className="flex items-center gap-2 hover:text-gray-900 transition cursor-pointer">
           <Image className='cursor-pointer' src={assets.user_icon} alt="user icon" />
           Account
         </button>

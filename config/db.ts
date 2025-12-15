@@ -1,10 +1,10 @@
 import mongoose from "mongoose";
 import { buffer } from "node:stream/consumers";
 
-let cached = global.mongoose
+let cached = (global as any).mongoose
 
 if (!cached) {
-    cached = global.mongoose = { conn: null, promise: null}
+    cached = (global as any).mongoose = { conn: null, promise: null}
 }
 
 async function connectDB() {
@@ -17,9 +17,11 @@ async function connectDB() {
             bufferCommands:false
         }
 
-        cached.promise = mongoose.connect('${process.env.MONGODB_URI}/quickcart',opts.then( mongoose => {
-            return mongoose
-        }))
+        cached.promise = (mongoose as any).connect(`${process.env.MONGODB_URI}/quickcart`, opts)
+        .then((mongoose: any) => {
+          return mongoose;
+       });
+
     }
 
     cached.conn = await cached.promise
