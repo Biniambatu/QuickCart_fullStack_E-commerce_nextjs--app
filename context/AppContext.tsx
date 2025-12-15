@@ -1,46 +1,82 @@
 'use client'
 
-import { productsDummyData } from "@/assets/assets";
-import { useUser } from "@clerk/nextjs";
+import { productsDummyData, userDummyData } from "@/assets/assets";
+import { useAuth, useUser } from "@clerk/nextjs";
+import axios from "axios";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
+import toast from "react-hot-toast";
+
 
     export const AppContext = createContext<any>(null)
 
     export const useAppContext = () => {
         return useContext(AppContext)
     }
-export const AppContextProvider = (props:any) => {
+
+    export const AppContextProvider = (props:any) => {
    
     const router = useRouter()
     const currency = process.env.NEXT_PUBLIC_CURRENCY
     
     const [ products, setProducts ] = useState([])
-    const [isSeller, setIsSeller] = useState(true)
+    const [isSeller, setIsSeller] = useState(false)
     const [userData, setUserData] = useState(false)
     const [cartItems, setCartItems] = useState({})
 
     const { user } = useUser()
+    const { getToken } = useAuth()
 
     const fetchProductData = async () => {
          setProducts(productsDummyData as any)
      }
-      useEffect(() => {
+
+    const fetchUserData = async () => {
+       try {
+       
+        if (user?.publicMetadata.role === 'seller') {
+            setIsSeller(true)
+        }
+
+        const token = await getToken()
+
+        const { data } = await axios.get('/api/user/data', { headers: {Authorization: `Bearer ${token}`}})
+
+        if (data.success) {
+           setUserData(data.user)   
+           setCartItems(data.user.cartItems)
+        }  else {
+            toast.error(data.message)
+        }
+
+       } catch (error:any) {
+            toast.error(error.message)      
+       }
+    }
+
+     useEffect(() => {
          fetchProductData()
      }, [])
 
-      const addToCart = async (itemId: any) => {
-    let cartData: any = structuredClone(cartItems);
+     useEffect(() => {
+        if(user){
+            fetchUserData()
+        }
+     }, [user])
+    
+     const addToCart = async (itemId: any) => {
+     
+        let cartData: any = structuredClone(cartItems);
 
-    if (cartData[itemId]) {
-        cartData[itemId] += 1;
-    } else {
-        cartData[itemId] = 1;
-    }
+        if (cartData[itemId]) {
+            cartData[itemId] += 1;
+        } else {
+            cartData[itemId] = 1;
+        }
 
-    setCartItems(cartData);
-};
-
+        setCartItems(cartData);
+        
+    };
 
      const updateCartQuantity = async (itemId:any, quantity:any) => {
 
@@ -83,7 +119,8 @@ export const AppContextProvider = (props:any) => {
         getCartAmount, getCartCount, 
         currency, isSeller,
         setIsSeller, userData, 
-        setUserData, user
+        setUserData, user,
+        fetchUserData, getToken
     }
      return (
          <AppContext.Provider value={value}>
