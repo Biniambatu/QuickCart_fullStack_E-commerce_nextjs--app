@@ -1,6 +1,5 @@
 'use client'
 
-import { productsDummyData, userDummyData } from "@/assets/assets";
 import { useAuth, useUser } from "@clerk/nextjs";
 import axios from "axios";
 import { useRouter } from "next/navigation";
@@ -28,8 +27,21 @@ import toast from "react-hot-toast";
     const { getToken } = useAuth()
 
     const fetchProductData = async () => {
-         setProducts(productsDummyData as any)
-     }
+
+        try {
+            
+            const { data } = await axios.get('/api/product/list')
+
+            if (data.success) {
+                setProducts(data.products)
+            } else {
+                toast.error(data.message)
+            }
+
+        } catch (error) {
+            toast.error((error as any).message)
+        }
+    }
 
     const fetchUserData = async () => {
        try {

@@ -14,11 +14,12 @@ const ProductCard = ({ product }:any) => {
         >
             <div className="cursor-pointer group relative bg-gray-500/10 rounded-lg w-full h-52 flex items-center justify-center">
                 <Image
-                    src={product.image[0]}
-                    alt={product.name}
+                    src={product.image && product.image[0] ? product.image[0] : assets.upload_area}
+                    alt={product.name || 'product Image'}
                     className="group-hover:scale-105 transition object-cover w-4/5 h-4/5 md:w-full md:h-full"
                     width={800}
                     height={800}
+                    onError={(e) => console.log("Image failed to load:", product.image)}
                 />
                 <button className="absolute top-2 right-2 bg-white p-2 rounded-full shadow-md">
                     <Image
