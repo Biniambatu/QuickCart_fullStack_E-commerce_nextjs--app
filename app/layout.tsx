@@ -3,6 +3,7 @@ import { Inter, Outfit } from "next/font/google";
 import "./globals.css";
 import { AppContextProvider } from "@/context/AppContext";
 import { ClerkProvider } from "@clerk/nextjs";
+import { Toaster } from "react-hot-toast";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -28,7 +29,10 @@ export default function RootLayout({
     <ClerkProvider>
       <html lang="en">
         <body className={`${outfit.className} antialiased text-gray-700`}>
-          <AppContextProvider>{children}</AppContextProvider>
+          <AppContextProvider>
+            {children}  
+            <Toaster position="top-right" />
+          </AppContextProvider>
         </body>
       </html>
     </ClerkProvider>

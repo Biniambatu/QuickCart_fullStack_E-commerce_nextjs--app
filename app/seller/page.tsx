@@ -164,7 +164,7 @@ const AddProduct = () => {
             />
           </div>
         </div>
-        <button type="submit" className="px-8 py-2.5 bg-orange-600 text-white font-medium rounded">
+        <button type="submit"  className="px-8 py-2.5 bg-orange-600 text-white font-medium rounded cursor-pointer">
           ADD
         </button>
       </form>

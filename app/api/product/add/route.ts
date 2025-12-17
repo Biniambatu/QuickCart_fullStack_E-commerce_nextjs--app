@@ -4,7 +4,6 @@ import Product from "@/models/Product";
 import { getAuth } from "@clerk/nextjs/server";
 import { v2 as cloudinary } from "cloudinary";
 import { NextResponse } from "next/server";
-import { error } from "node:console";
 
 
 //config cloudinaty
@@ -19,10 +18,17 @@ export async function POST(request:any) {
         
         const { userId } = getAuth(request)
 
+        if (!userId) {
+        return NextResponse.json(
+            { success: false, message: "Unauthorized" },
+            { status: 401 }
+        );
+        }
+
         const isSeller = await authSeller(userId)
 
         if (!isSeller) {
-            return NextResponse.json({ success: false, message: 'not authorized' })
+            return NextResponse.json({ success: false, message: 'not authorized' },{ status: 403})
         }
 
         const formData = await request.formData()
@@ -33,7 +39,7 @@ export async function POST(request:any) {
         const price = formData.get('price')
         const offerPrice = formData.get('offerPrice')
         
-        const files = formData.getAll('images')
+        const files = formData.getAll('image')
 
         if (!files || files.length === 0) {
             return NextResponse.json({ success: false, message: 'no files uploaded' })
@@ -78,6 +84,6 @@ export async function POST(request:any) {
     return NextResponse.json({ success: true, message:'Upoad successfully', newProduct})
 
     } catch (error) {
-            return NextResponse.json({ success: false, message: (error as any).message })        
+        return NextResponse.json({ success: false, message: (error as any).message }, { status: 500 })        
     }
 }
