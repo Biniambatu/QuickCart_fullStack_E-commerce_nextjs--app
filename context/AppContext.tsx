@@ -2,6 +2,7 @@
 
 import { useAuth, useUser } from "@clerk/nextjs";
 import axios from "axios";
+import { headers } from "next/headers";
 import { useRouter } from "next/navigation";
 import { createContext, useContext, useEffect, useState } from "react";
 import toast from "react-hot-toast";
@@ -76,6 +77,7 @@ import toast from "react-hot-toast";
         }
      }, [user])
     
+
      const addToCart = async (itemId: any) => {
      
         let cartData: any = structuredClone(cartItems);
@@ -87,6 +89,19 @@ import toast from "react-hot-toast";
         }
 
         setCartItems(cartData);
+
+        if (user) {
+            try {
+                const token = await getToken()
+
+                await axios.post('/api/cart/update', {cartData},{ headers: {Authorization: `Bearer ${token}`}})
+
+                toast.success('Item added to cart')
+
+            } catch (error) {
+                toast.error((error as any).message)      
+            }
+        }
         
     };
 
@@ -99,6 +114,18 @@ import toast from "react-hot-toast";
             cartData[itemId] = quantity;
         }
         setCartItems(cartData)
+         if (user) {
+            try {
+                const token = await getToken()
+
+                await axios.post('/api/cart/update', {cartData},{ headers: {Authorization: `Bearer ${token}`}})
+
+                toast.success('Cart updated')
+
+            } catch (error) {
+                toast.error((error as any).message)      
+            }
+        }
 
     }
 
