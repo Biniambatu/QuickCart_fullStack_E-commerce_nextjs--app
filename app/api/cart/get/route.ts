@@ -1,10 +1,10 @@
 import connectDB from "@/config/db";
-import User from "@/models/user";
+import User from "@/models/User";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 
-export async function GET(request:any) {
+export async function GET(request: any) {
     try {
         // Use auth() which handles Bearer tokens
         let { userId } = await auth()
@@ -24,24 +24,24 @@ export async function GET(request:any) {
         }
 
         if (!userId) {
-            return NextResponse.json({ success:false, message: "Unauthorized" }, { status: 401 })
+            return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 })
         }
 
         await connectDB()
-        
+
         const user = await User.findById(userId)
-        
+
         if (!user) {
-            return NextResponse.json({ success:false, message: "User not found" })
+            return NextResponse.json({ success: false, message: "User not found" })
         }
 
         // Ensure cartItems is always an object, never null/undefined
         const cartItems = user.cartItems || {}
 
-        return NextResponse.json({ success:true, cartItems })
+        return NextResponse.json({ success: true, cartItems })
 
     } catch (error: any) {
         console.error('Error getting cart:', error)
-        return NextResponse.json({ success:false, message: error.message || 'Failed to get cart' }, { status: 500 })
+        return NextResponse.json({ success: false, message: error.message || 'Failed to get cart' }, { status: 500 })
     }
 }

@@ -1,11 +1,11 @@
 import connectDB from "@/config/db";
-import User from "@/models/user";
+import User from "@/models/User";
 import { auth } from "@clerk/nextjs/server";
 import { NextResponse } from "next/server";
 
 
 
-export async function POST(request:any) {
+export async function POST(request: any) {
     try {
         // Use auth() which handles Bearer tokens
         let { userId } = await auth()
@@ -25,20 +25,20 @@ export async function POST(request:any) {
         }
 
         if (!userId) {
-            return NextResponse.json({success:false, message: "Unauthorized"}, { status: 401 })
+            return NextResponse.json({ success: false, message: "Unauthorized" }, { status: 401 })
         }
 
         const { cartData } = await request.json()
 
         if (!cartData || typeof cartData !== 'object') {
-            return NextResponse.json({success:false, message: "Invalid cart data"})
+            return NextResponse.json({ success: false, message: "Invalid cart data" })
         }
 
         await connectDB()
         const user = await User.findById(userId)
 
         if (!user) {
-            return NextResponse.json({success:false, message: "User not found"})
+            return NextResponse.json({ success: false, message: "User not found" })
         }
 
         // Update cartItems - ensure it's an object
@@ -47,10 +47,10 @@ export async function POST(request:any) {
 
         console.log('Cart updated successfully:', { userId, cartItems: user.cartItems })
 
-        return NextResponse.json({ success:true, cartItems: user.cartItems })
+        return NextResponse.json({ success: true, cartItems: user.cartItems })
 
     } catch (error: any) {
         console.error('Error updating cart:', error)
-        return NextResponse.json({success:false, message: error.message || 'Failed to update cart'}, { status: 500 })
+        return NextResponse.json({ success: false, message: error.message || 'Failed to update cart' }, { status: 500 })
     }
 }  
