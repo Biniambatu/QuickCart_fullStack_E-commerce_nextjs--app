@@ -57,7 +57,8 @@ import toast from "react-hot-toast";
 
         if (data.success) {
            setUserData(data.user)   
-           setCartItems(data.user.cartItems)
+           // Ensure cartItems is always an object, never null/undefined
+           setCartItems(data.user.cartItems || {})
         }  else {
             toast.error(data.message)
         }
