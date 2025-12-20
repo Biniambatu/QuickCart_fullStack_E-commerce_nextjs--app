@@ -1,17 +1,37 @@
 import { addressDummyData } from "@/assets/assets";
 import { useAppContext } from "@/context/AppContext";
+import axios from "axios";
 import React, { useEffect, useState } from "react";
+import toast from "react-hot-toast";
 
 const OrderSummary = () => {
 
-  const { currency, router, getCartCount, getCartAmount } = useAppContext() as any
+  const { currency, router, getCartCount, getCartAmount, getToken, user, cartItems, setCartItems } = useAppContext() as any
+
   const [selectedAddress, setSelectedAddress] = useState(null);
   const [isDropdownOpen, setIsDropdownOpen] = useState(false);
 
   const [userAddresses, setUserAddresses] = useState([]);
 
   const fetchUserAddresses = async () => {
-    setUserAddresses(addressDummyData as any);
+
+     try {
+              const token  = await getToken()
+
+            const { data } = await axios.get('/api/user/get-address', {headers:{Authorization: `Bearer ${token}`}})
+
+            if(data.success) {
+              setUserAddresses(data.addresses);
+                if (data.addresses.length > 0) {
+                  setSelectedAddress(data.addresses[0])
+                }
+            } else {
+              toast.error(data.message)
+            }
+        } catch (error) {
+            toast.error((error as any).message)
+        }
+
   }
 
   const handleAddressSelect = (address:any) => {
@@ -24,12 +44,14 @@ const OrderSummary = () => {
   }
 
   useEffect(() => {
-    fetchUserAddresses();
-  }, [])
+    if (user) {
+      fetchUserAddresses();
+    }
+  }, [user])
 
 
   return (
-    <div className="w-full md:w-96 bg-gray-500/5 p-5">
+   <div className="w-full md:w-96 bg-gray-500/5 p-5">
       <h2 className="text-xl md:text-2xl font-medium text-gray-700">
         Order Summary
       </h2>
@@ -45,7 +67,7 @@ const OrderSummary = () => {
               onClick={() => setIsDropdownOpen(!isDropdownOpen)}
             >
               <span>
-                {selectedAddress as any
+                {selectedAddress
                   ? `${(selectedAddress as any).fullName}, ${(selectedAddress as any).area}, ${(selectedAddress as any).city}, ${(selectedAddress as any).state}`
                   : "Select Address"}
               </span>
@@ -64,7 +86,7 @@ const OrderSummary = () => {
                     className="px-4 py-2 hover:bg-gray-500/10 cursor-pointer"
                     onClick={() => handleAddressSelect(address)}
                   >
-                   {(address as any).fullName}, {(address as any).area}, {(address as any).city}, {(address as any).state}
+                    {(address as any).fullName}, {(address as any).area}, {(address as any).city}, {(address as any).state}
                   </li>
                 ))}
                 <li
