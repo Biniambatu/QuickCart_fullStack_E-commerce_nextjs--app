@@ -58,7 +58,7 @@ const OrderSummary = () => {
         address: (selectedAddress as any)._id,
         items: cartItemsArray
       },{
-        headers: {Authorization:`Bearer ${token} `}
+        headers: {Authorization:`Bearer ${token}`}
       })
 
       if (data.success) {

@@ -1,5 +1,4 @@
 import { inngest } from "@/config/inngest";
-import Order from "@/models/Order";
 import Product from "@/models/Product";
 import User from "@/models/User";
 import { getAuth } from "@clerk/nextjs/server";
@@ -25,7 +24,7 @@ export async function POST(request:any) {
         },0)
 
         await inngest.send({
-            name: 'Order/created',
+            name: 'order/created',
             data: {
                 userId,
                 address,
@@ -40,11 +39,11 @@ export async function POST(request:any) {
         user.cartItems = {}
         await user.save()
 
-        return NextResponse.json({ success: true, messade: 'Order Placed' })
+        return NextResponse.json({ success: true, message: 'Order Placed' })
    
     } catch (error) {
         console.log(error)
-        return NextResponse.json({ success: false, messade: (error as any).message })
+        return NextResponse.json({ success: false, message: (error as any).message })
 
     }
 }
