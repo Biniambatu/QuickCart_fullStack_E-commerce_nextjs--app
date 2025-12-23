@@ -6,22 +6,41 @@ import { useAppContext } from "@/context/AppContext";
 import Footer from "@/components/Footer";
 import Navbar from "@/components/Navbar";
 import Loading from "@/components/Loading";
+import axios from "axios";
+import toast from "react-hot-toast";
 
 const MyOrders = () => {
 
-    const { currency } = useAppContext() as any;
+    const { currency, getToken, user } = useAppContext() as any;
 
     const [orders, setOrders] = useState<any[]>([]);
     const [loading, setLoading] = useState(true);
-
+    
     const fetchOrders = async () => {
-        setOrders(orderDummyData as any);
-        setLoading(false);
+        
+        try {
+            const token = await getToken()
+            const { data } = await axios.get('/api/order/list', {headers:{Authorization: `Bearer ${token}`}})
+            
+            if (data.success) {
+                setOrders(data.orders.reverse());
+                setLoading(false);
+            } else {
+                toast.error(data.message)
+            }  
+        } catch (error) {
+            toast.error((error as any).message)
+        }
+
+        
+        
     };
 
     useEffect(() => {
-        fetchOrders();
-    }, []);
+        if (user) {
+        fetchOrders();  
+        }
+    }, [user]);
 
     return (
         <>
@@ -61,16 +80,16 @@ const MyOrders = () => {
                                     <div>
                                         <p>
                                             <span className="font-medium">
-                                                {order.address.fullName}
+                                                {order.address?.fullName}
                                             </span>
                                             <br />
-                                            <span>{order.address.area}</span>
+                                            <span>{order.address?.area}</span>
                                             <br />
                                             <span>
-                                                {`${order.address.city}, ${order.address.state}`}
+                                                {`${order.address?.city}, ${order.address?.state}`}
                                             </span>
                                             <br />
-                                            <span>{order.address.phoneNumber}</span>
+                                            <span>{order.address?.phoneNumber}</span>
                                         </p>
                                     </div>
 
