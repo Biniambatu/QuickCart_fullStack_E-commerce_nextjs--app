@@ -1,0 +1,10 @@
+// tailwind.config.js
+module.exports = {
+  darkMode: 'class', // Add this line
+  content: [
+    "./app/**/*.{js,ts,jsx,tsx,mdx}",
+    "./pages/**/*.{js,ts,jsx,tsx,mdx}",
+    "./components/**/*.{js,ts,jsx,tsx,mdx}",
+  ],
+  // ...
+}

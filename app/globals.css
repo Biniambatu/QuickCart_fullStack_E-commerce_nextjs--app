@@ -1,26 +1,30 @@
 @import "tailwindcss";
 
+/* 1. Tell Tailwind v4 to trigger dark: classes when .dark is on the html tag */
+@variant dark (&:where(.dark, .dark *));
+
 :root {
   --background: #ffffff;
   --foreground: #171717;
+  /* Add other theme variables here */
 }
 
-@theme inline {
+/* 2. Update variables when the .dark class is present */
+.dark {
+  --background: #0a0a0a;
+  --foreground: #ededed;
+}
+
+@theme {
+  /* This maps the CSS variables to Tailwind's theme system */
   --color-background: var(--background);
   --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
-}
-
+/* 3. Global Styles */
 body {
-  background: var(--background);
+  background-color: var(--background);
   color: var(--foreground);
   font-family: Arial, Helvetica, sans-serif;
+  transition: background-color 0.3s ease, color 0.3s ease;
 }
